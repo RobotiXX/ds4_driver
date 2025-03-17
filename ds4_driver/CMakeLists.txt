@@ -50,5 +50,7 @@ install(PROGRAMS nodes/ds4_driver_node.py
   DESTINATION lib/${PROJECT_NAME})
 install(PROGRAMS nodes/ds4_twist_node.py
   DESTINATION lib/${PROJECT_NAME})
+install(PROGRAMS nodes/scout_controller.py
+  DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
