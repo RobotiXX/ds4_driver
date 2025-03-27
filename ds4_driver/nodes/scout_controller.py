@@ -21,11 +21,11 @@ class PS4Teleop(Node):
         self.prev_buttons = []
 
         # Scaling factors for velocities (tweak as needed)
-        self.linear_scale = 1.0
+        self.linear_scale = 0.6
         self.angular_scale = 1.0
 
         # Threshold for trigger activation (assuming triggers are axes in [0,1])
-        self.trigger_threshold = 0.05
+        self.trigger_threshold = 0.001
 
         # Mapping assumptions (may vary with ds4drv configuration):
         # Axes:

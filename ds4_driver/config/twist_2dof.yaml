@@ -10,7 +10,8 @@ ds4_twist:
         # Use right horizontal stick for rotation
         z: axis_right_x
     scales:
-      linear:
-        x: 1.5
-      angular:
-        z: 0.5
+      default:
+        linear:
+          x: 0.5
+        angular:
+          z: 0.5
