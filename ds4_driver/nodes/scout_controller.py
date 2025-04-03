@@ -21,7 +21,8 @@ class PS4Teleop(Node):
         self.prev_buttons = []
 
         # Scaling factors for velocities (tweak as needed)
-        self.linear_scale = 0.6
+        self.linear_scale_slow = 0.7
+        self.linear_scale_fast = 1.2
         self.angular_scale = 1.0
 
         # Threshold for trigger activation (assuming triggers are axes in [0,1])
@@ -47,9 +48,14 @@ class PS4Teleop(Node):
 
         # Safety: Only allow motion if either L2 or R2 is pressed (trigger value above threshold)
         safety_active = False
+        fast_mode = False
         if len(msg.axes) > 5:  # Ensure there are enough axes
-            if msg.axes[4] > self.trigger_threshold or msg.axes[5] > self.trigger_threshold:
+            if msg.axes[4] > self.trigger_threshold:
                 safety_active = True
+                fast_mode = False
+            elif msg.axes[5] > self.trigger_threshold:
+                safety_active = True
+                fast_mode = True
 
         twist = Twist()
         if safety_active:
@@ -57,8 +63,11 @@ class PS4Teleop(Node):
             # Assuming: 
             #   - msg.axes[3] is right stick vertical (for linear.x)
             #   - msg.axes[2] is right stick horizontal (for angular.z)
-            twist.linear.x = self.linear_scale * msg.axes[3]
-            twist.angular.z = self.angular_scale * msg.axes[2]
+            if fast_mode:
+                twist.linear.x = self.linear_scale_fast * msg.axes[1]
+            else:
+                twist.linear.x = self.linear_scale_slow * msg.axes[1]
+            twist.angular.z = self.angular_scale * msg.axes[0]
         else:
             # Safety: do not move if no trigger is held
             twist.linear.x = 0.0
@@ -83,13 +92,13 @@ class PS4Teleop(Node):
         if self.is_button_pressed(msg.buttons, 3):
             mark_msg = Int8(data=2)
             self.traj_marking_pub.publish(mark_msg)
-            self.get_logger().info("Triangle pressed: Trajectory discard marked (2)")
+            self.get_logger().info("X pressed: Trajectory discard marked (2)")
 
         # X button (index 1): publish to sync command (send 1)
         if self.is_button_pressed(msg.buttons, 1):
             sync_msg = Int8(data=1)
             self.sync_pub.publish(sync_msg)
-            self.get_logger().info("X pressed: Sync command sent (1)")
+            self.get_logger().info("Triangle pressed: Sync command sent (1)")
 
         # Update previous button states for next callback
         self.prev_buttons = list(msg.buttons)
