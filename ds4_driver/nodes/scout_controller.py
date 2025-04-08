@@ -61,13 +61,13 @@ class PS4Teleop(Node):
         if safety_active:
             # Map right stick to movement:
             # Assuming: 
-            #   - msg.axes[3] is right stick vertical (for linear.x)
+            #   - msg.axes[1] is left stick vertical (for linear.x)
             #   - msg.axes[2] is right stick horizontal (for angular.z)
             if fast_mode:
                 twist.linear.x = self.linear_scale_fast * msg.axes[1]
             else:
                 twist.linear.x = self.linear_scale_slow * msg.axes[1]
-            twist.angular.z = self.angular_scale * msg.axes[0]
+            twist.angular.z = self.angular_scale * msg.axes[2]
         else:
             # Safety: do not move if no trigger is held
             twist.linear.x = 0.0
