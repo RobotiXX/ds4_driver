@@ -22,7 +22,7 @@ class PS4Teleop(Node):
 
         # Scaling factors for velocities (tweak as needed)
         self.linear_scale_slow = 0.7
-        self.linear_scale_fast = 1.2
+        self.linear_scale_fast = 1.0
         self.angular_scale = 1.0
 
         # Threshold for trigger activation (assuming triggers are axes in [0,1])
